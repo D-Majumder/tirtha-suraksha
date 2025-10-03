@@ -225,7 +225,8 @@ class _SosScreenState extends State<SosScreen> {
               child: Text(
                 _statusText,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 16, color: Colors.black54),
+                // --- THIS IS THE FINAL MERGED FIX ---
+                style: TextStyle(fontSize: 16, color: Theme.of(context).textTheme.bodySmall?.color),
               ),
             ),
           ],
@@ -266,7 +267,6 @@ class _SosAlertReceivedScreenState extends State<SosAlertReceivedScreen> {
 
       VolumeController().setVolume(1.0, showSystemUI: false);
 
-      // Using a different AudioSource configuration for alarm stream
       final source = AudioSource.asset('assets/audio/alarm.mp3');
       await _alarmPlayer.setAudioSource(source, initialPosition: Duration.zero, preload: true);
       
@@ -342,3 +342,4 @@ class _SosAlertReceivedScreenState extends State<SosAlertReceivedScreen> {
     );
   }
 }
+

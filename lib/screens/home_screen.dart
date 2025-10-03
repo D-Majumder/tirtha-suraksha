@@ -8,13 +8,16 @@ import 'package:tirtha_suraksha/screens/coming_soon_screen.dart';
 import 'package:tirtha_suraksha/screens/services_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  // It now accepts the user's name
+  final String userName;
+  const HomeScreen({super.key, required this.userName});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -35,22 +38,60 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     final headlineColor = Theme.of(context).textTheme.headlineLarge?.color;
-    final subheadlineColor = Theme.of(context).textTheme.headlineMedium?.color?.withOpacity(0.7);
+    final subheadlineColor =
+        Theme.of(context).textTheme.headlineMedium?.color?.withOpacity(0.7);
 
     return Scaffold(
+      // The new drawer for the hamburger menu
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              child: Text(
+                'Tirtha Suraksha',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.info_outline),
+              title: const Text('About'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
+        // The leading icon now opens the drawer
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: Icon(Icons.menu, color: Theme.of(context).colorScheme.onSurface),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.menu, color: Theme.of(context).colorScheme.onSurface),
-          onPressed: () {},
-        ),
         actions: const [
           Padding(
             padding: EdgeInsets.only(right: 16.0),
+            // The avatar now uses the new illustration
             child: CircleAvatar(
-              backgroundColor: Colors.lightBlue,
-              child: Text('D', style: TextStyle(color: Colors.white)),
+              backgroundImage: AssetImage('assets/avatars/boy_avatar.png'),
             ),
           ),
         ],
@@ -62,7 +103,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           children: [
             const SizedBox(height: 16),
             Text('Hello,', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w500, color: subheadlineColor)),
-            Text('Dhruv', style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: headlineColor)),
+            // The name is now dynamic from the login screen
+            Text(widget.userName, style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: headlineColor)),
             const SizedBox(height: 24),
             Text('Where shall we guide you today?', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: headlineColor)),
             const SizedBox(height: 24),
@@ -72,11 +114,12 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 prefixIcon: Icon(Icons.search, color: Theme.of(context).colorScheme.onSurfaceVariant),
                 filled: true,
                 fillColor: Theme.of(context).colorScheme.surfaceVariant,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(30.0), borderSide: BorderSide.none),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none),
               ),
             ),
             const SizedBox(height: 24),
-            // --- THIS IS THE CORRECTED TABBAR ---
             TabBar(
               controller: _tabController,
               tabs: const [
@@ -139,7 +182,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           if (index < 2) {
             _tabController.animateTo(index);
           } else {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const SosScreen()));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => const SosScreen()));
           }
         },
         items: const [
@@ -151,8 +195,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     );
   }
 
-  Widget _buildExploreCard({ required String title, String? imagePath, Color? color, VoidCallback? onTap}) {
-    final textColor = (imagePath != null) ? Colors.white : Theme.of(context).colorScheme.onSurface;
+  Widget _buildExploreCard(
+      {required String title,
+      String? imagePath,
+      Color? color,
+      VoidCallback? onTap}) {
+    final textColor = (imagePath != null)
+        ? Colors.white
+        : Theme.of(context).colorScheme.onSurface;
 
     return GestureDetector(
       onTap: onTap,
@@ -163,7 +213,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           height: double.infinity,
           decoration: BoxDecoration(
             color: color,
-            image: imagePath != null ? DecorationImage(image: AssetImage(imagePath), fit: BoxFit.cover) : null,
+            image: imagePath != null
+                ? DecorationImage(
+                    image: AssetImage(imagePath), fit: BoxFit.cover)
+                : null,
           ),
           child: Align(
             alignment: Alignment.bottomLeft,
@@ -175,7 +228,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   color: textColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
-                  shadows: imagePath != null ? [const Shadow(blurRadius: 10.0, color: Colors.black54)] : [],
+                  shadows: imagePath != null
+                      ? [const Shadow(blurRadius: 10.0, color: Colors.black54)]
+                      : [],
                 ),
               ),
             ),
@@ -213,7 +268,8 @@ class _MapWidgetState extends State<MapWidget> {
 
   void _toggleMapType() {
     setState(() {
-      _currentMapType = _currentMapType == MapType.normal ? MapType.satellite : MapType.normal;
+      _currentMapType =
+          _currentMapType == MapType.normal ? MapType.satellite : MapType.normal;
     });
   }
 
@@ -226,11 +282,13 @@ class _MapWidgetState extends State<MapWidget> {
         child: Stack(
           children: [
             GoogleMap(
-              initialCameraPosition: _initialCameraPosition,
-              markers: _markers,
-              mapType: _currentMapType,
-              gestureRecognizers: { Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer()) }
-            ),
+                initialCameraPosition: _initialCameraPosition,
+                markers: _markers,
+                mapType: _currentMapType,
+                gestureRecognizers: {
+                  Factory<OneSequenceGestureRecognizer>(
+                      () => EagerGestureRecognizer())
+                }),
             Positioned(
               top: 10,
               right: 10,

@@ -14,16 +14,17 @@ class ComingSoonScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.construction, size: 80, color: Colors.grey),
+            Icon(Icons.construction, size: 80, color: Colors.grey[400]),
             const SizedBox(height: 24),
             Text(
               '$featureName Feature',
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 8),
-            const Text(
+            // --- THIS IS THE FIX ---
+            Text(
               'This feature is currently under development.',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+              style: TextStyle(fontSize: 16, color: Theme.of(context).textTheme.bodySmall?.color),
             ),
           ],
         ),
