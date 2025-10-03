@@ -1,4 +1,4 @@
-package com.example.bodhicompasssihtest
+package com.example.tirtha_suraksha
 
 import io.flutter.embedding.android.FlutterActivity
 

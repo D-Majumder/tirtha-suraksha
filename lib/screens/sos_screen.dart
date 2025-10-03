@@ -1,9 +1,13 @@
+import 'dart:async';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:nearby_connections/nearby_connections.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:vibration/vibration.dart';
+import 'package:volume_controller/volume_controller.dart';
+
 class SosScreen extends StatefulWidget {
   const SosScreen({super.key});
 
@@ -23,18 +27,15 @@ class _SosScreenState extends State<SosScreen> {
     super.initState();
     _startAdvertisingAndListening();
   }
-  
+
   void _onPayloadReceived(String endpointId, Payload payload) {
     if (payload.type == PayloadType.BYTES) {
       final message = String.fromCharCodes(payload.bytes!);
-      if (message == "SOS_ALERT") {
-        print("SOS Message Received from $endpointId");
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => SosAlertReceivedScreen(fromUser: endpointId),
-          ),
-        );
-      }
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => SosAlertReceivedScreen(alertType: message, fromUser: endpointId),
+        ),
+      );
     }
   }
 
@@ -62,7 +63,7 @@ class _SosScreenState extends State<SosScreen> {
           print("Disconnected from: $id");
         },
       );
-      if(mounted) {
+      if (mounted) {
         setState(() {
           _statusText = "Silently listening for SOS signals...";
         });
@@ -72,9 +73,9 @@ class _SosScreenState extends State<SosScreen> {
     }
   }
 
-  void _sendBroadcastSOS() async {
+  void _sendBroadcastSOS(String alertType) async {
     setState(() {
-      _statusText = "SOS Sent! Broadcasting to nearby devices...";
+      _statusText = "SOS Sent! Broadcasting '$alertType' to nearby devices...";
       connectedDeviceIds.clear();
       _isBroadcasting = true;
     });
@@ -93,10 +94,10 @@ class _SosScreenState extends State<SosScreen> {
             },
             onConnectionResult: (endpointId, status) {
               if (status == Status.CONNECTED) {
-                print("Connected to $endpointId, sending SOS.");
-                final data = Uint8List.fromList("SOS_ALERT".codeUnits);
+                print("Connected to $endpointId, sending '$alertType'.");
+                final data = Uint8List.fromList(alertType.codeUnits);
                 Nearby().sendBytesPayload(endpointId, data);
-                if(mounted) {
+                if (mounted) {
                   setState(() {
                     connectedDeviceIds.add(endpointId);
                   });
@@ -116,16 +117,61 @@ class _SosScreenState extends State<SosScreen> {
 
       await Future.delayed(const Duration(seconds: 15));
       await Nearby().stopDiscovery();
-      if(mounted) {
+      if (mounted) {
         setState(() {
           _statusText = "SOS broadcast finished. Alerted ${connectedDeviceIds.length} device(s).";
           _isBroadcasting = false;
         });
       }
-
     } catch (e) {
       print("Discovery/Broadcast error: $e");
     }
+  }
+
+  void _showSosOptions() {
+    if (_isBroadcasting) return;
+
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Wrap(
+          children: <Widget>[
+            ListTile(
+              leading: const Icon(Icons.child_care, color: Colors.red),
+              title: const Text('Child Lost'),
+              onTap: () {
+                Navigator.pop(context);
+                _sendBroadcastSOS("CHILD_LOST");
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.medical_services, color: Colors.red),
+              title: const Text('Medical Emergency'),
+              onTap: () {
+                Navigator.pop(context);
+                _sendBroadcastSOS("MEDICAL_EMERGENCY");
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.security, color: Colors.red),
+              title: const Text('Security Threat'),
+              onTap: () {
+                Navigator.pop(context);
+                _sendBroadcastSOS("SECURITY_THREAT");
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.business_center, color: Colors.orange),
+              title: const Text('Lost Belonging'),
+              onTap: () {
+                Navigator.pop(context);
+                _sendBroadcastSOS("LOST_BELONGING");
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -145,7 +191,7 @@ class _SosScreenState extends State<SosScreen> {
               repeat: true,
               glowCount: 2,
               child: GestureDetector(
-                onTap: _sendBroadcastSOS,
+                onTap: _showSosOptions,
                 child: Container(
                   width: 200,
                   height: 200,
@@ -190,29 +236,42 @@ class _SosScreenState extends State<SosScreen> {
 }
 
 class SosAlertReceivedScreen extends StatefulWidget {
+  final String alertType;
   final String fromUser;
-  const SosAlertReceivedScreen({super.key, required this.fromUser});
+  const SosAlertReceivedScreen({super.key, required this.alertType, required this.fromUser});
 
   @override
   State<SosAlertReceivedScreen> createState() => _SosAlertReceivedScreenState();
 }
 
 class _SosAlertReceivedScreenState extends State<SosAlertReceivedScreen> {
-  final _audioPlayer = AudioPlayer();
+  final _alarmPlayer = AudioPlayer();
+  double _originalVolume = 0.5;
 
   @override
   void initState() {
     super.initState();
+    VolumeController().getVolume().then((volume) {
+      _originalVolume = volume;
+    });
     _startAlarm();
   }
 
   Future<void> _startAlarm() async {
     try {
-      // Set the audio file and make it loop
-      await _audioPlayer.setAsset('assets/audio/alarm.mp3');
-      await _audioPlayer.setLoopMode(LoopMode.one);
-      // Play the sound
-      _audioPlayer.play();
+      bool? hasVibrator = await Vibration.hasVibrator();
+      if (hasVibrator ?? false) {
+        Vibration.vibrate(pattern: [500, 1000], repeat: 0);
+      }
+
+      VolumeController().setVolume(1.0, showSystemUI: false);
+
+      // Using a different AudioSource configuration for alarm stream
+      final source = AudioSource.asset('assets/audio/alarm.mp3');
+      await _alarmPlayer.setAudioSource(source, initialPosition: Duration.zero, preload: true);
+      
+      _alarmPlayer.setLoopMode(LoopMode.one);
+      _alarmPlayer.play();
     } catch (e) {
       print("Error loading or playing alarm sound: $e");
     }
@@ -220,32 +279,50 @@ class _SosAlertReceivedScreenState extends State<SosAlertReceivedScreen> {
 
   @override
   void dispose() {
-    // Stop and release the player when the screen is closed
-    _audioPlayer.dispose();
+    Vibration.cancel();
+    _alarmPlayer.dispose();
+    VolumeController().setVolume(_originalVolume, showSystemUI: false);
     super.dispose();
+  }
+
+  (IconData, String) _getAlertDetails() {
+    switch (widget.alertType) {
+      case "CHILD_LOST":
+        return (Icons.child_care, "CHILD LOST ALERT");
+      case "MEDICAL_EMERGENCY":
+        return (Icons.medical_services, "MEDICAL EMERGENCY");
+      case "SECURITY_THREAT":
+        return (Icons.security, "SECURITY THREAT");
+      case "LOST_BELONGING":
+        return (Icons.business_center, "LOST BELONGING ALERT");
+      default:
+        return (Icons.warning_amber_rounded, "GENERAL ALERT RECEIVED");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final (icon, title) = _getAlertDetails();
     return Scaffold(
       backgroundColor: Colors.red[900],
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.warning_amber_rounded, color: Colors.white, size: 120),
+            Icon(icon, color: Colors.white, size: 120),
             const SizedBox(height: 32),
-            const Text(
-              'EMERGENCY SOS RECEIVED',
-              style: TextStyle(
+            Text(
+              title,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
               ),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
             Text(
-              'From nearby user: ${widget.fromUser}', // Use widget.fromUser
+              'From nearby user: ${widget.fromUser}',
               style: const TextStyle(color: Colors.white70, fontSize: 18),
             ),
             const SizedBox(height: 50),
