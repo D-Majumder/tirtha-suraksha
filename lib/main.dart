@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bodhicompasssihtest/screens/home_screen.dart';
+import 'package:tirtha_suraksha/screens/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Bodhi Compass',
+      title: 'Tirtha Suraksha',
       debugShowCheckedModeBanner: false,
 
       // Light Mode Theme

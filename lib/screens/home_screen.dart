@@ -2,9 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:bodhicompasssihtest/screens/monastery_detail_screen.dart';
-import 'package:bodhicompasssihtest/screens/sos_screen.dart';
-import 'package:bodhicompasssihtest/screens/coming_soon_screen.dart';
+import 'package:tirtha_suraksha/screens/monastery_detail_screen.dart';
+import 'package:tirtha_suraksha/screens/sos_screen.dart';
+import 'package:tirtha_suraksha/screens/coming_soon_screen.dart';
+import 'package:tirtha_suraksha/screens/services_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,8 +14,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -34,12 +34,15 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final headlineColor = Theme.of(context).textTheme.headlineLarge?.color;
+    final subheadlineColor = Theme.of(context).textTheme.headlineMedium?.color?.withOpacity(0.7);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.black87),
+          icon: Icon(Icons.menu, color: Theme.of(context).colorScheme.onSurface),
           onPressed: () {},
         ),
         actions: const [
@@ -58,26 +61,24 @@ class _HomeScreenState extends State<HomeScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 16),
-            const Text('Hello,', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w500, color: Colors.black54)),
-            Text('Dhruv', style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.blueGrey[800])),
+            Text('Hello,', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w500, color: subheadlineColor)),
+            Text('Dhruv', style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: headlineColor)),
             const SizedBox(height: 24),
-            const Text('Where shall we guide you today?', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black87)),
+            Text('Where shall we guide you today?', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: headlineColor)),
             const SizedBox(height: 24),
             TextField(
               decoration: InputDecoration(
-                hintText: 'Search monasteries, rituals, places...',
-                prefixIcon: const Icon(Icons.search),
+                hintText: 'Search temples, rituals, places...',
+                prefixIcon: Icon(Icons.search, color: Theme.of(context).colorScheme.onSurfaceVariant),
                 filled: true,
-                fillColor: Colors.grey[200],
+                fillColor: Theme.of(context).colorScheme.surfaceVariant,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(30.0), borderSide: BorderSide.none),
               ),
             ),
             const SizedBox(height: 24),
+            // --- THIS IS THE CORRECTED TABBAR ---
             TabBar(
               controller: _tabController,
-              labelColor: Colors.black,
-              unselectedLabelColor: Colors.grey,
-              indicatorColor: Colors.black,
               tabs: const [
                 Tab(text: 'Explore'),
                 Tab(text: 'Guides'),
@@ -89,50 +90,38 @@ class _HomeScreenState extends State<HomeScreen>
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 16.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: GridView.count(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
                       children: [
-                        Expanded(
-                          flex: 1,
-                          child: _buildExploreCard(
-                            title: 'Monasteries',
-                            imagePath: 'assets/images/phodong_monastery.jpg',
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => const MonasteryDetailScreen()),
-                              );
-                            },
-                          ),
+                        _buildExploreCard(
+                          title: 'Live 360° Darshan',
+                          imagePath: 'assets/images/phodong_monastery.jpg',
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const MonasteryDetailScreen()));
+                          },
                         ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          flex: 1,
-                          child: Column(
-                            children: [
-                              Expanded(
-                                flex: 8,
-                                child: _buildExploreCard(
-                                  title: 'Murals',
-                                  color: Colors.orange[300],
-                                  onTap: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => const ComingSoonScreen(featureName: 'Murals')));
-                                  },
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              Expanded(
-                                flex: 5,
-                                child: _buildExploreCard(
-                                  title: 'Cultural Calendar',
-                                  color: Colors.grey[300],
-                                  onTap: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => const ComingSoonScreen(featureName: 'Cultural Calendar')));
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
+                        _buildExploreCard(
+                          title: 'Temple History',
+                          color: Colors.orange[300],
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const ComingSoonScreen(featureName: 'Temple History')));
+                          },
+                        ),
+                        _buildExploreCard(
+                          title: 'Festival Schedule',
+                          color: Colors.grey[300],
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const ComingSoonScreen(featureName: 'Festival Schedule')));
+                          },
+                        ),
+                        _buildExploreCard(
+                          title: 'Book Services',
+                          color: Colors.green[200],
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const ServicesScreen()));
+                          },
                         ),
                       ],
                     ),
@@ -150,10 +139,7 @@ class _HomeScreenState extends State<HomeScreen>
           if (index < 2) {
             _tabController.animateTo(index);
           } else {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SosScreen()),
-            );
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const SosScreen()));
           }
         },
         items: const [
@@ -165,12 +151,9 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  Widget _buildExploreCard({
-    required String title,
-    String? imagePath,
-    Color? color,
-    VoidCallback? onTap,
-  }) {
+  Widget _buildExploreCard({ required String title, String? imagePath, Color? color, VoidCallback? onTap}) {
+    final textColor = (imagePath != null) ? Colors.white : Theme.of(context).colorScheme.onSurface;
+
     return GestureDetector(
       onTap: onTap,
       child: ClipRRect(
@@ -180,12 +163,7 @@ class _HomeScreenState extends State<HomeScreen>
           height: double.infinity,
           decoration: BoxDecoration(
             color: color,
-            image: imagePath != null
-                ? DecorationImage(
-                    image: AssetImage(imagePath),
-                    fit: BoxFit.cover,
-                  )
-                : null,
+            image: imagePath != null ? DecorationImage(image: AssetImage(imagePath), fit: BoxFit.cover) : null,
           ),
           child: Align(
             alignment: Alignment.bottomLeft,
@@ -194,12 +172,10 @@ class _HomeScreenState extends State<HomeScreen>
               child: Text(
                 title,
                 style: TextStyle(
-                  color: imagePath != null ? Colors.white : Colors.black,
+                  color: textColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
-                  shadows: imagePath != null
-                      ? [const Shadow(blurRadius: 10.0, color: Colors.black54)]
-                      : [],
+                  shadows: imagePath != null ? [const Shadow(blurRadius: 10.0, color: Colors.black54)] : [],
                 ),
               ),
             ),
@@ -212,27 +188,34 @@ class _HomeScreenState extends State<HomeScreen>
 
 class MapWidget extends StatefulWidget {
   const MapWidget({super.key});
-
   @override
   State<MapWidget> createState() => _MapWidgetState();
 }
 
 class _MapWidgetState extends State<MapWidget> {
+  MapType _currentMapType = MapType.normal;
+
   static const _initialCameraPosition = CameraPosition(
-    target: LatLng(27.3389, 88.6065),
-    zoom: 11.5,
+    target: LatLng(23.4247, 88.3892),
+    zoom: 15.0,
   );
 
   final Set<Marker> _markers = {
     const Marker(
-      markerId: MarkerId('rumtekMonastery'),
-      position: LatLng(27.2897, 88.5683),
+      markerId: MarkerId('iskconMayapur'),
+      position: LatLng(23.4247, 88.3892),
       infoWindow: InfoWindow(
-        title: 'Rumtek Monastery',
-        snippet: 'A famous monastery in Sikkim',
+        title: 'ISKCON Mayapur (TOVP)',
+        snippet: 'Temple of the Vedic Planetarium',
       ),
     ),
   };
+
+  void _toggleMapType() {
+    setState(() {
+      _currentMapType = _currentMapType == MapType.normal ? MapType.satellite : MapType.normal;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -240,14 +223,23 @@ class _MapWidgetState extends State<MapWidget> {
       padding: const EdgeInsets.only(top: 16.0),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16.0),
-        child: GoogleMap(
-          initialCameraPosition: _initialCameraPosition,
-          markers: _markers,
-          gestureRecognizers: {
-            Factory<OneSequenceGestureRecognizer>(
-              () => EagerGestureRecognizer(),
+        child: Stack(
+          children: [
+            GoogleMap(
+              initialCameraPosition: _initialCameraPosition,
+              markers: _markers,
+              mapType: _currentMapType,
+              gestureRecognizers: { Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer()) }
             ),
-          }
+            Positioned(
+              top: 10,
+              right: 10,
+              child: FloatingActionButton.small(
+                onPressed: _toggleMapType,
+                child: const Icon(Icons.map),
+              ),
+            ),
+          ],
         ),
       ),
     );
