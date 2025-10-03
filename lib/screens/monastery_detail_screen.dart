@@ -18,7 +18,9 @@ class _MonasteryDetailScreenState extends State<MonasteryDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _audioPlayer.setAsset('assets/audio/guide.mp3');
+    _audioPlayer.setAsset('assets/audio/guide.mp3').then((_) {
+      _audioPlayer.play();
+    });
   }
 
   @override
@@ -37,7 +39,7 @@ class _MonasteryDetailScreenState extends State<MonasteryDetailScreen> {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double panelWidth = 160.0;
-    final double rightPosition = _areButtonsCollapsed ? -(panelWidth - 40) : 16.0;
+    final double rightPosition = _areButtonsCollapsed ? -(panelWidth - 60) : 16.0;
 
     return Scaffold(
       appBar: AppBar(
