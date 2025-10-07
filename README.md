@@ -29,8 +29,7 @@
 
 ## 🌺 Essence
 
-**Tirtha Suraksha** is a sacred convergence of faith and innovation —  
-a digital guardian that ensures safety, accessibility, and spiritual awareness at India’s revered pilgrimage sites.
+**Tirtha Suraksha** is a sacred convergence of faith and innovation a digital guardian that ensures safety, accessibility, and spiritual awareness at India’s revered pilgrimage sites.
 
 > 🕉️ *“In every devotee’s journey, there lies a story — our mission is to make each one safe, connected, and complete.”*
 
