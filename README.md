@@ -139,3 +139,7 @@ an offering to open collaboration for public good and spiritual safety.
 <div align="center">
   <img src="https://img.shields.io/badge/🙏_Made_with_Devotion_and_Code_-gold?style=for-the-badge" alt="Made with Devotion">
 </div>
+
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=F4C430&height=100&section=footer&text=Seek+Wisdom,+Share+Light.&fontSize=22&fontColor=000000&animation=fadeIn" />
+</p>
