@@ -141,5 +141,9 @@ an offering to open collaboration for public good and spiritual safety.
 </div>
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=F4C430&height=100&section=footer&text=Seek+Wisdom,+Share+Light.&fontSize=22&fontColor=000000&animation=fadeIn" />
+  
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=F4C430&height=100&section=footer&text=Seek+Wisdom,+Share+Light.&fontSize=22&fontColor=111111&animation=fadeIn" />
 </p>
+<div align="center">
+<img src="https://img.shields.io/badge/🚀_Crafted_for_Smart_India_Hackathon_2025-Innovative_&_Impactful-black?style=for-the-badge" alt="Pure Tech Badge">
+</div>
