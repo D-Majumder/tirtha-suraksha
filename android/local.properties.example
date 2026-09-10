@@ -1,0 +1,10 @@
+# Copy this file to "local.properties" in the same directory (android/local.properties)
+# and fill in your own values. local.properties is already git-ignored and must never be
+# committed.
+
+# flutter.sdk=/path/to/flutter
+
+# Google Maps SDK for Android API key, used by android/app/src/main/AndroidManifest.xml
+# via the MAPS_API_KEY manifest placeholder. Get a key from:
+# https://console.cloud.google.com/google/maps-apis
+MAPS_API_KEY=your_google_maps_api_key_here

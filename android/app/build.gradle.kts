@@ -14,6 +14,15 @@ if (keyPropertiesFile.exists()) {
     keyProperties.load(FileInputStream(keyPropertiesFile))
 }
 
+// Local, git-ignored config for values that must not be committed (e.g. API keys).
+// See android/local.properties.example for the expected format.
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
+}
+val mapsApiKey: String = localProperties.getProperty("MAPS_API_KEY", "")
+
 android {
     namespace = "com.example.tirtha_suraksha"
     compileSdk = flutter.compileSdkVersion
@@ -37,20 +46,32 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
     signingConfigs {
-        create("release") {
-            keyAlias = keyProperties["keyAlias"] as String
-            keyPassword = keyProperties["keyPassword"] as String
-            storeFile = file(keyProperties["storeFile"] as String)
-            storePassword = keyProperties["storePassword"] as String
+        if (keyPropertiesFile.exists()) {
+            create("release") {
+                keyAlias = keyProperties["keyAlias"] as String
+                keyPassword = keyProperties["keyPassword"] as String
+                storeFile = file(keyProperties["storeFile"] as String)
+                storePassword = keyProperties["storePassword"] as String
+            }
         }
     }
 
     buildTypes {
         getByName("release") {
-            signingConfig = signingConfigs.getByName("release")
+            // Fall back to debug signing when key.properties (git-ignored) isn't
+            // present, e.g. on a fresh clone. Without this guard, evaluating this
+            // build file fails at Gradle configuration time for *any* task,
+            // including `assembleDebug`, since key.properties is never committed.
+            signingConfig = if (keyPropertiesFile.exists()) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
         }
     }
 }
