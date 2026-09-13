@@ -1,149 +1,49 @@
-<h1 align="center" id="title" style="display:flex;align-items:center;justify-content:center;gap:12px;">
-  <img src="/assets/images/logo.png" alt="Tirtha Suraksha Logo" width="70" style="margin-top:3px;">
-  🪷 <span style="font-weight:700;">Tirtha Suraksha</span> 🪷
-</h1>
+# Tirtha Suraksha
 
-<p align="center">
-  <i>“Where Faith Meets Safety — A Divine Harmony of Tradition and Technology.”</i>
-</p>
+A safety and accessibility companion app for pilgrimage sites, built with Flutter for Smart India Hackathon 2025.
 
-<p align="center">
-  <img src="https://static01.nyt.com/images/2025/01/14/multimedia/00xp-festival-01-fkpv/00xp-festival-01-fkpv-videoSixteenByNine3000.jpg" alt="Maha Kumbh Mela" style="max-width:100%;height:auto;border-radius:12px;box-shadow:0 0 15px rgba(255,140,0,0.3);">
-</p>
+## Overview
 
-<p align="center">
-  <img src="https://img.shields.io/badge/SurakshaNet-Offline%20Mesh-gold" alt="SurakshaNet Badge">
-  <img src="https://img.shields.io/badge/Smart-Darshan-saffron" alt="Smart Darshan Badge">
-  <img src="https://img.shields.io/badge/Flutter-Framework-blue?logo=flutter" alt="Flutter Badge">
-  <img src="https://img.shields.io/badge/Firebase-Backend-yellow?logo=firebase" alt="Firebase Badge">
-  <img src="https://img.shields.io/badge/License-MIT-lightgrey" alt="License Badge">
-</p>
+Tirtha Suraksha is a mobile app aimed at improving safety, navigation, and accessibility for visitors at large Indian pilgrimage sites. It combines map-based navigation, a 360-degree panoramic viewer for select monasteries, and groundwork for offline peer-to-peer communication between nearby devices.
 
----
+## Features
 
-<div align="center">
-  <img src="https://img.shields.io/badge/🌸_Faith_With_Tech_-_Harmony_-orange?style=for-the-badge" alt="Faith with Tech">
-</div>
+- Home, monastery/site detail, and SOS screens
+- Video playback for site media (video_player, chewie)
+- Map-based navigation using the Google Maps Flutter plugin
+- A 360-degree panoramic viewer covering two monasteries, Rumtek and Phodong, displayed through an in-app web view (flutter_inappwebview)
+- Groundwork for offline, nearby-device communication using Bluetooth Low Energy and device-discovery APIs (flutter_reactive_ble, nearby_connections); this is present in the app's dependencies as infrastructure, not a fully described end-to-end feature
 
----
+## Not yet implemented
 
-## 🌺 Essence
+The app currently shows an explicit "under development" placeholder screen for the following two features:
 
-**Tirtha Suraksha** is a sacred convergence of faith and innovation a digital guardian that ensures safety, accessibility, and spiritual awareness at India’s revered pilgrimage sites.
+- Temple History
+- Festival Schedule
 
-> 🕉️ *“In every devotee’s journey, there lies a story — our mission is to make each one safe, connected, and complete.”*
+## Future work
 
----
+- AI-based crowd analysis via CCTV footage (not implemented; mentioned as a future direction in earlier project material)
 
-## ✨ Features of Divine Innovation
+## Tech stack
 
-🌸 **SurakshaNet:**  
-Offline mesh alert network for real-time SOS, medical, and security communication — works even with no mobile signal.  
+- Flutter (Android, iOS, and desktop build targets are present in the repository)
+- Google Maps Flutter plugin
+- Bluetooth Low Energy and nearby-device discovery APIs
 
-🌸 **Interactive Safety Map:**  
-Locate medical stations, police posts, accessibility routes, and safe zones with one tap.  
+Implementation note: no Firebase package appears in this repository's pubspec.yaml or in its Android build configuration. Firebase is therefore not listed as part of the current implementation, regardless of how the project has been described elsewhere.
 
-🌸 **Virtual Darshan (360°):**  
-Experience temple interiors and live crowd status before entering the premises.  
+## Setup
 
-🌸 **Smart Queue Updates:**  
-Real-time darshan waiting estimates, digital passes, and guided entry points.  
+    git clone https://github.com/D-Majumder/Tirtha-Suraksha
+    cd Tirtha-Suraksha
+    flutter pub get
+    flutter run
 
-🌸 **Inclusive Seva:**  
-- ISL (Indian Sign Language) guided videos.  
-- Wheelchair-friendly route planning.  
-- Screen-reader accessibility for visually impaired devotees.  
+## Limitations
 
-🌸 **AI Crowd Alerts (Future Vision):**  
-Predictive alerts through CCTV analysis to prevent overcrowding or potential hazards.  
+Two advertised features, Temple History and Festival Schedule, are UI placeholders only, with no underlying functionality yet. The offline communication groundwork (Bluetooth and nearby-device APIs) is present as a dependency but has not been independently verified here as a complete, working feature end-to-end.
 
----
+## License
 
-## 🛕 Hackathon MVP Highlights
-
-🪔 **Core Demo:** SurakshaNet functioning mesh prototype (offline emergency broadcast).  
-🪔 **Virtual Darshan:** Live panoramic demo for a temple (e.g., Somnath).  
-🪔 **Accessibility Showcase:** ISL integration and voice narration experience.  
-
----
-
-## 🧭 Technical Framework
-
-🟡 **Flutter:** Unified codebase for Android & iOS.  
-🟡 **Firebase:** Serverless cloud backend with real-time updates.  
-🟡 **Bluetooth / Wi-Fi Direct Mesh:** Peer-to-peer data exchange (SurakshaNet backbone).  
-🟡 **Google Maps API:** Live route and zone mapping.  
-🟡 **AI / Computer Vision (Planned):** Crowd analysis and risk prediction.  
-
----
-
-## 🌼 Feasibility & Vision
-
-| Phase | Description |
-|-------|--------------|
-| 🛕 **Pilot Launch** | Begin with Somnath or Puri with local temple trust partnership. |
-| 🌍 **Expansion** | Scale to other major pilgrimage routes and festivals. |
-| 💰 **Sustainability** | Free for pilgrims; verified vendor and booking integration. |
-| 🌺 **Long-Term Goal** | Create a unified digital safety network for Indian faith tourism. |
-
----
-
-## 📈 Divine Impact
-
-| Domain | Blessing |
-|--------|-----------|
-| 🕊️ **Safety** | Prevents mishaps, enables faster response. |
-| 💰 **Economy** | Connects verified vendors and pilgrims. |
-| 🛕 **Cultural** | Preserves spiritual heritage in digital form. |
-| ♿ **Inclusivity** | Ensures no devotee is left behind. |
-
----
-
-## 🛠️ Built With
-
-- [Flutter](https://flutter.dev/) — Cross-platform UI Framework  
-- [Firebase](https://firebase.google.com/) — Backend & Realtime Database  
-- Bluetooth / Wi-Fi Direct — Offline Mesh Networking  
-- [Google Maps API](https://developers.google.com/maps) — Mapping & Routing  
-- AI (Future) — Predictive Crowd Analytics  
-
----
-
-## 🛡️ License
-
-This project and all associated works are shared under the **MIT License** —  
-an offering to open collaboration for public good and spiritual safety.
-
----
-
-## 🤝 Connect With Us
-
-<p align="center">
-  <a href="mailto:dhrubamajumder@proton.me" target="_blank">
-    <img src="https://img.shields.io/badge/Email-Dhruba%20Majumder-blue?logo=gmail" alt="Email Badge">
-  </a>
-  <a href="https://www.linkedin.com/in/iamdhrubamajumder/" target="_blank">
-    <img src="https://img.shields.io/badge/LinkedIn-Dhruba%20Majumder-blue?logo=linkedin" alt="LinkedIn Badge">
-  </a>
-  <a href="https://github.com/D-Majumder" target="_blank">
-    <img src="https://img.shields.io/badge/GitHub-D--Majumder-black?logo=github" alt="GitHub Badge">
-  </a>
-</p>
-
-<p align="center">
-  🪷 <i>“Faith deserves safety — and technology can make it happen.”</i> 🪷
-</p>
-
----
-
-<div align="center">
-  <img src="https://img.shields.io/badge/🙏_Made_with_Devotion_and_Code_-gold?style=for-the-badge" alt="Made with Devotion">
-</div>
-
-<p align="center">
-  
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=F4C430&height=100&section=footer&text=Seek+Wisdom,+Share+Light.&fontSize=22&fontColor=111111&animation=fadeIn" />
-</p>
-<div align="center">
-<img src="https://img.shields.io/badge/🚀_Crafted_for_Smart_India_Hackathon_2025-Innovative_&_Impactful-black?style=for-the-badge" alt="Pure Tech Badge">
-</div>
+No license file is currently present in this repository. Without one, all rights to the code are reserved by the author by default.
