@@ -35,8 +35,8 @@ Implementation note: no Firebase package appears in this repository's pubspec.ya
 
 ## Setup
 
-    git clone https://github.com/D-Majumder/Tirtha-Suraksha
-    cd Tirtha-Suraksha
+    git clone https://github.com/D-Majumder/tirtha-suraksha
+    cd tirtha-suraksha
     flutter pub get
     flutter run
 
